@@ -18,7 +18,7 @@ export default `
             availableForSale
             title
             image {
-              url(transform: {maxWidth: 120})
+              url(transform: {maxWidth: 800})
             }
             selectedOptions {
               name

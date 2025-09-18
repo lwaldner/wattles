@@ -34,6 +34,13 @@ const { data: collection } = useFetchCollection("studio-inventory");
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 800px) {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 28px;
+  }
 }
 
 .product-block {
@@ -59,6 +66,9 @@ const { data: collection } = useFetchCollection("studio-inventory");
   text-align: center;
   width: 100%;
   margin-top: 20px;
+  @media (max-width: 800px) {
+    margin-top: 12px;
+  }
 }
 .product-info span {
   display: block;

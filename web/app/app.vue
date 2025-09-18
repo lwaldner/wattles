@@ -28,7 +28,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .layout-default {
   position: relative;
-  padding: 45px 45px 45px 245px;
+  padding: 45px 90px 45px 245px;
   box-sizing: border-box;
   background-color: #fff;
   min-height: 100dvh;

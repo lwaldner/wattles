@@ -1,11 +1,18 @@
 <template>
   <section class="page-product-detail">
     <div class="slideshow-wrapper">
-      <swiper-container class="slideshow" ref="slideshowEl">
-        <swiper-slide v-for="image in product.images.nodes" :key="image.id">
-          <img :src="image.medium" alt="product" />
-        </swiper-slide>
-      </swiper-container>
+      <client-only>
+        <swiper-container
+          class="slideshow"
+          ref="slideshowEl"
+          navigation="true"
+          loop="true"
+        >
+          <swiper-slide v-for="image in product.images.nodes" :key="image.id">
+            <img :src="image.medium" alt="product" />
+          </swiper-slide>
+        </swiper-container>
+      </client-only>
       <div class="thumbnails">
         <img
           v-for="(image, index) in product.images.nodes"
@@ -17,19 +24,24 @@
       </div>
     </div>
     <div class="product-info">
-      <h2 class="product-title">{{ product.title }}</h2>
-      <div class="price">
-        ${{ parseFloat(product.variants.nodes[0].priceV2.amount).toFixed(2) }}
+      <div class="info-wrapper">
+        <h2 class="product-title">{{ product.title }}</h2>
+        <div class="price">
+          ${{ parseFloat(product.variants.nodes[0].priceV2.amount).toFixed(2) }}
+        </div>
       </div>
       <div class="description" v-html="product.descriptionHtml" />
-      <div class="atc-button" @click="addToCart">Add To Cart</div>
+      <div v-if="!itemInCart" class="atc-button" @click="addToCart">
+        Add To Cart
+      </div>
+      <div v-else class="atc-button" @click="removeFromCart">
+        Remove From Cart
+      </div>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { register } from "swiper/element/bundle";
-register();
 const cartStore = useCartStore();
 const route = useRoute();
 const { data: product } = await useFetchProduct(route.params.product);
@@ -41,6 +53,18 @@ const goToSlide = (index: number) => {
 const addToCart = async () => {
   await cartStore.addToCart(product.value.variants.nodes[0].id, 1);
 };
+
+const removeFromCart = async () => {
+  await cartStore.removeFromCart(itemInCart.value.id);
+};
+
+const itemInCart = computed(() => {
+  return (
+    cartStore.cart?.lines?.nodes?.find(
+      (item) => item.merchandise.product.id === product.value.id
+    ) ?? false
+  );
+});
 </script>
 
 <style lang="scss" scoped>
@@ -51,12 +75,24 @@ const addToCart = async () => {
 }
 
 .slideshow-wrapper {
-  width: 650px;
+  max-width: 650px;
+  width: calc(100% - 280px);
   aspect-ratio: 1;
 }
 
 .slideshow {
   margin: 0;
+  --swiper-navigation-color: #fff;
+  &::part(button-next) {
+    display: none;
+    width: 12px;
+    mix-blend-mode: difference;
+  }
+  &::part(button-prev) {
+    display: none;
+    width: 12px;
+    mix-blend-mode: difference;
+  }
   img {
     display: block;
     width: 100%;
@@ -83,6 +119,7 @@ const addToCart = async () => {
 
 .product-info {
   margin-bottom: 78px;
+  min-width: 280px;
   .product-title {
     color: var(--accent-color);
     font-size: 32px;
@@ -107,6 +144,54 @@ const addToCart = async () => {
         background-color: #fff;
         color: var(--accent-color);
       }
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .page-product-detail {
+    display: block;
+  }
+  .slideshow {
+    &::part(button-next) {
+      display: unset;
+    }
+    &::part(button-prev) {
+      display: unset;
+    }
+  }
+  .slideshow-wrapper {
+    width: 100%;
+    max-width: unset;
+  }
+  .thumbnails {
+    display: none;
+  }
+  .product-info {
+    margin: 0;
+    .info-wrapper {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      .product-title {
+        margin: 0;
+        flex: 1 1 auto;
+      }
+      .price {
+        padding-top: 8px;
+      }
+    }
+    .description {
+      ::v-deep(p) {
+        margin: 8px 0;
+      }
+    }
+    .atc-button {
+      width: 100%;
+      border: unset;
+      box-sizing: border-box;
+      text-align: center;
+      margin-top: 20px;
     }
   }
 }

@@ -21,7 +21,13 @@
             >
           </div>
         </div>
-        <div class="nav-item has-children" @click="toggleSubNav">
+        <div
+          :class="[
+            'nav-item has-children',
+            { 'child-active': route.path.startsWith('/studio-inventory') },
+          ]"
+          @click="toggleSubNav"
+        >
           <span>Available Works</span>
           <div class="sub-nav">
             <a
@@ -30,7 +36,12 @@
               href="https://artandlightgallery.com/artist/balla-wattles"
               >Gallery Works</a
             >
-            <nuxt-link class="sub-nav-item" to="/studio-inventory"
+            <nuxt-link
+              :class="[
+                'sub-nav-item',
+                { active: route.path.startsWith('/studio-inventory') },
+              ]"
+              to="/studio-inventory"
               >Studio Inventory</nuxt-link
             >
           </div>
@@ -55,6 +66,8 @@
 
 <script lang="ts" setup>
 const { mobileMenuOpen } = storeToRefs(useMainStore());
+
+const route = useRoute();
 
 const toggleSubNav = (e: MouseEvent) => {
   const el = e.currentTarget as HTMLElement;
@@ -86,6 +99,7 @@ const toggleSubNav = (e: MouseEvent) => {
   .nav-item {
     line-height: 30px;
     cursor: pointer;
+    &.child-active,
     &.open {
       color: var(--accent-color);
       .sub-nav {
@@ -120,6 +134,7 @@ const toggleSubNav = (e: MouseEvent) => {
       height: auto;
     }
   }
+  .active,
   .router-link-active {
     color: var(--accent-color);
   }
@@ -136,17 +151,17 @@ const toggleSubNav = (e: MouseEvent) => {
     position: relative;
     padding: 0 0 40px 0;
     width: 100%;
-    // background-color: #fff;
     .logo {
       margin-bottom: 14px;
     }
     .mobile-menu-toggle {
       display: block;
       position: fixed;
-      top: 20px;
+      top: 30px;
       right: 20px;
       color: var(--accent-color);
       font-size: 15px;
+      font-weight: bold;
       cursor: pointer;
       z-index: 200;
       &.menu-open {
