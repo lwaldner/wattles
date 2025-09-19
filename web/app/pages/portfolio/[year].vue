@@ -38,17 +38,21 @@ const slideshowActive = ref(!!route.query?.slide);
 const slideshowIndex = ref(parseInt((route.query?.slide as string) ?? "1") - 1);
 const numCols = ref(4);
 
-watch(winWidth, (width) => {
-  if (width < 800) {
-    numCols.value = 1;
-  } else if (width < 1000) {
-    numCols.value = 2;
-  } else if (width < 1500) {
-    numCols.value = 3;
-  } else {
-    numCols.value = 4;
-  }
-});
+watch(
+  winWidth,
+  (width) => {
+    if (width < 800) {
+      numCols.value = 1;
+    } else if (width < 1000) {
+      numCols.value = 2;
+    } else if (width < 1500) {
+      numCols.value = 3;
+    } else {
+      numCols.value = 4;
+    }
+  },
+  { immediate: true }
+);
 
 const imagesColumns = computed(() => {
   const columns = Array.from({ length: numCols.value }, () => []);
