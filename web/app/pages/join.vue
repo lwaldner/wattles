@@ -55,6 +55,8 @@ const submitEmail = async () => {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding-right: 155px;
+  box-sizing: border-box;
   .heading {
     color: var(--accent-color);
     font-size: 32px;
@@ -120,6 +122,7 @@ const submitEmail = async () => {
   }
   @media (max-width: 800px) {
     height: calc(100dvh - 272px);
+    padding: 0;
   }
 }
 </style>
