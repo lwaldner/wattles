@@ -9,6 +9,7 @@
 <script lang="ts" setup>
 const { mobileMenuOpen } = storeToRefs(useMainStore());
 const cartStore = useCartStore();
+const { winWidth, winHeight } = storeToRefs(useMainStore());
 
 watch(mobileMenuOpen, (newVal) => {
   if (newVal) {
@@ -18,8 +19,15 @@ watch(mobileMenuOpen, (newVal) => {
   }
 });
 
+const setScreenDimensions = () => {
+  winWidth.value = window.innerWidth;
+  winHeight.value = window.innerHeight;
+};
+
 onMounted(async () => {
   if (import.meta.client) {
+    setScreenDimensions();
+    window.addEventListener("resize", setScreenDimensions);
     await cartStore.loadCart();
   }
 });

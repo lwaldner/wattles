@@ -77,11 +77,12 @@ const itemInCart = computed(() => {
 .slideshow-wrapper {
   max-width: 650px;
   width: calc(100% - 280px);
-  aspect-ratio: 1;
 }
 
 .slideshow {
   margin: 0;
+  width: 100%;
+  height: auto;
   --swiper-navigation-color: #fff;
   &::part(button-next) {
     display: none;

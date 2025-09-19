@@ -19,6 +19,9 @@
         <span class="item-title">{{ item.merchandise.product.title }}</span>
         <span class="remove-item" @click="removeFromCart(item.id)">Remove</span>
       </div>
+      <div class="price">
+        ${{ parseFloat(item.merchandise.priceV2.amount).toFixed(2) }}
+      </div>
     </nuxt-link>
     <a class="checkout-button" :href="cart?.checkoutUrl ?? ''">Checkout</a>
   </div>
@@ -27,13 +30,21 @@
 <script lang="ts" setup>
 const cartStore = useCartStore();
 const { cart, cartOpen } = storeToRefs(cartStore);
+const route = useRoute();
 
 const numCartItems = computed(() => cart.value?.lines?.nodes.length ?? 0);
 
-watch(numCartItems, (newCount) => {
-  if (newCount === 0) {
+watch(cart, (newCart, oldCart) => {
+  const numItems = newCart?.lines?.nodes.length ?? 0;
+  if (numItems === 0) {
     cartOpen.value = false;
-  } else cartOpen.value = true;
+  } else if (numItems && oldCart?.id) {
+    cartOpen.value = true;
+  }
+});
+
+watch(route, () => {
+  cartOpen.value = false;
 });
 
 const removeFromCart = (lineId: string) => {
@@ -50,6 +61,7 @@ const removeFromCart = (lineId: string) => {
   color: var(--accent-color);
   font-weight: bold;
   cursor: pointer;
+  z-index: 100;
   @media (hover: hover) {
     &:hover {
       text-decoration: underline;
@@ -63,12 +75,13 @@ const removeFromCart = (lineId: string) => {
   z-index: 200;
   width: 300px;
   height: 100%;
+  overflow-y: auto;
   color: #fff;
   background-color: var(--accent-color);
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 45px 20px 10px;
+  padding: 45px 20px 20px;
   box-sizing: border-box;
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -132,6 +145,9 @@ const removeFromCart = (lineId: string) => {
       }
     }
   }
+  .price {
+    font-size: 14px;
+  }
 }
 .checkout-button {
   display: block;
@@ -160,6 +176,10 @@ const removeFromCart = (lineId: string) => {
   }
   .cart {
     width: 100%;
+    transform: translateY(-100%);
+    &.open {
+      transform: translateY(0);
+    }
   }
 }
 </style>

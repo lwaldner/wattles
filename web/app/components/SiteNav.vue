@@ -10,7 +10,13 @@
     <div :class="['nav-menu', { 'menu-open': mobileMenuOpen }]">
       <div class="primary-nav">
         <nuxt-link class="nav-item" to="/">Home</nuxt-link>
-        <div class="nav-item has-children" @click="toggleSubNav">
+        <div
+          :class="[
+            'nav-item has-children',
+            { 'child-active': route.path.startsWith('/portfolio') },
+          ]"
+          @click="toggleSubNav"
+        >
           <span>Portfolio</span>
           <div class="sub-nav">
             <nuxt-link class="sub-nav-item" to="/portfolio/2025"
@@ -75,6 +81,10 @@ const toggleSubNav = (e: MouseEvent) => {
     el.classList.toggle("open");
   }
 };
+
+watch(route, () => {
+  mobileMenuOpen.value = false;
+});
 </script>
 
 <style lang="scss" scoped>
