@@ -58,15 +58,14 @@
         <nuxt-link class="nav-item" to="/about">About</nuxt-link>
         <nuxt-link class="nav-item" to="/join">Join</nuxt-link>
       </div>
+      <a
+        target="_blank"
+        class="social-link"
+        href="https://www.instagram.com/bellawattles/"
+      >
+        <svg-instagram-logo />
+      </a>
     </div>
-
-    <a
-      target="_blank"
-      class="social-link"
-      href="https://www.instagram.com/bellawattles/"
-    >
-      <svg-instagram-logo />
-    </a>
   </header>
 </template>
 
@@ -159,10 +158,10 @@ watch(route, () => {
   }
   @media only screen and (max-width: 800px) {
     position: relative;
-    padding: 0 0 40px 0;
+    padding: 0 0 20px 0;
     width: 100%;
     .logo {
-      margin-bottom: 14px;
+      margin-bottom: 0;
     }
     .mobile-menu-toggle {
       display: block;
@@ -181,6 +180,7 @@ watch(route, () => {
     .social-link {
       svg {
         width: 16px;
+        fill: #fff;
       }
     }
     .nav-menu {
