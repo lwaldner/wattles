@@ -18,7 +18,8 @@ export default defineNuxtConfig({
         { charset: "utf-8" },
         {
           name: "viewport",
-          content: "width=device-width, minimum-scale=1.0, maximum-scale=5.0",
+          content:
+            "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0",
         },
         {
           property: "og:image",

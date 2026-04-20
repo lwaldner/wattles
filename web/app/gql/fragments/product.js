@@ -16,6 +16,8 @@ export default `
       small: url(transform: {maxWidth: 120})
       medium: url(transform: {maxWidth: 1000})
       large: url(transform: {maxWidth: 1600})
+      width
+      height
       id
       altText
     }

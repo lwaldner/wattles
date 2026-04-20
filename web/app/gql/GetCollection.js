@@ -11,6 +11,8 @@ export default `query GetCollection($handle: String!) {
           featuredImage {
             desktop: url(transform: {maxWidth: 500})
             mobile: url(transform: {maxWidth: 240})
+            width
+            height
           }
           priceRange {
             maxVariantPrice {

@@ -9,15 +9,16 @@
       <img
         class="product-image"
         :src="product.node.featuredImage.desktop"
+        :style="{
+          aspectRatio: `${product.node.featuredImage.width} / ${product.node.featuredImage.height}`,
+        }"
         alt="product"
       />
       <div class="product-info">
         <span class="title">{{ product.node.title }}</span>
         <span class="price"
           >${{
-            parseFloat(product.node.priceRange.minVariantPrice.amount).toFixed(
-              2
-            )
+            parseInt(product.node.priceRange.minVariantPrice.amount)
           }}</span
         >
       </div>
@@ -31,22 +32,31 @@ const { data: collection } = useFetchCollection("studio-inventory");
 
 <style lang="scss" scoped>
 .page-studio-inventory {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  column-count: 4;
+  column-gap: 20px;
   @media (max-width: 1200px) {
-    grid-template-columns: repeat(2, 1fr);
+    column-count: 3;
   }
-  @media (max-width: 800px) {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 28px;
+  @media (max-width: 900px) {
+    column-count: 2;
+  }
+  @media (max-width: 600px) {
+    column-count: 1;
+    column-gap: 28px;
   }
 }
 
 .product-block {
   display: block;
   width: 100%;
+  margin-bottom: 20px;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
   transition: color 0.2s;
+  @media (max-width: 600px) {
+    margin-bottom: 28px;
+  }
   @media (hover: hover) {
     &:hover {
       color: var(--accent-color);
@@ -57,7 +67,6 @@ const { data: collection } = useFetchCollection("studio-inventory");
 .product-image {
   width: 100%;
   height: auto;
-  aspect-ratio: 1;
   display: block;
   object-fit: contain;
 }

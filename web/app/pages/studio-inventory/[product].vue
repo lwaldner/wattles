@@ -4,16 +4,21 @@
       <client-only>
         <swiper-container
           class="slideshow"
+          :class="{ 'is-single-slide': !hasMultipleSlides }"
           ref="slideshowEl"
-          navigation="true"
-          loop="true"
+          :navigation="hasMultipleSlides"
+          :loop="hasMultipleSlides"
         >
           <swiper-slide v-for="image in product.images.nodes" :key="image.id">
-            <img :src="image.medium" alt="product" />
+            <img
+              :src="image.medium"
+              :style="{ aspectRatio: `${image.width} / ${image.height}` }"
+              alt="product"
+            />
           </swiper-slide>
         </swiper-container>
       </client-only>
-      <div class="thumbnails">
+      <div class="thumbnails" v-if="hasMultipleSlides">
         <img
           v-for="(image, index) in product.images.nodes"
           :key="image.id"
@@ -30,13 +35,13 @@
           ${{ parseFloat(product.variants.nodes[0].priceV2.amount).toFixed(2) }}
         </div>
       </div>
-      <div class="description" v-html="product.descriptionHtml" />
       <div v-if="!itemInCart" class="atc-button" @click="addToCart">
         Add To Cart
       </div>
       <div v-else class="atc-button" @click="removeFromCart">
         Remove From Cart
       </div>
+      <div class="description" v-html="product.descriptionHtml" />
     </div>
   </section>
 </template>
@@ -65,17 +70,19 @@ const itemInCart = computed(() => {
     ) ?? false
   );
 });
+
+const hasMultipleSlides = computed(
+  () => (product.value?.images?.nodes?.length ?? 0) > 1
+);
 </script>
 
 <style lang="scss" scoped>
 .page-product-detail {
-  display: flex;
-  gap: 24px;
-  align-items: center;
+  
 }
 
 .slideshow-wrapper {
-  max-width: 650px;
+  max-width: 100%;
   width: calc(100% - 280px);
 }
 
@@ -94,10 +101,12 @@ const itemInCart = computed(() => {
     width: 12px;
     mix-blend-mode: difference;
   }
+  :deep(swiper-slide) {
+    width: 100% !important;
+  }
   img {
     display: block;
     width: 100%;
-    aspect-ratio: 1;
     height: auto;
     object-fit: contain;
   }
@@ -107,7 +116,6 @@ const itemInCart = computed(() => {
   img {
     width: 65px;
     height: auto;
-    aspect-ratio: 1;
     cursor: pointer;
     transition: opacity 0.2s;
     @media (hover: hover) {
@@ -119,6 +127,7 @@ const itemInCart = computed(() => {
 }
 
 .product-info {
+  margin-top: 12px;
   margin-bottom: 78px;
   min-width: 280px;
   .product-title {
@@ -139,6 +148,7 @@ const itemInCart = computed(() => {
     font-weight: bold;
     cursor: pointer;
     border: 4px solid var(--accent-color);
+    margin: 8px 0 0 0;
     transition: background-color 0.2s, color 0.2s;
     @media (hover: hover) {
       &:hover {
@@ -153,7 +163,7 @@ const itemInCart = computed(() => {
   .page-product-detail {
     display: block;
   }
-  .slideshow {
+  .slideshow:not(.is-single-slide) {
     &::part(button-next) {
       display: unset;
     }
@@ -192,7 +202,7 @@ const itemInCart = computed(() => {
       border: unset;
       box-sizing: border-box;
       text-align: center;
-      margin-top: 20px;
+      margin: 8px 0 20px 0;
     }
   }
 }

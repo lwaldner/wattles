@@ -41,7 +41,8 @@ onMounted(async () => {
   background-color: #fff;
   min-height: 100dvh;
   @media only screen and (max-width: 800px) {
-    padding: 20px 20px 20px;
+    padding: 0px 20px 20px;
+    min-height: calc(100dvh - 58px);
   }
 }
 </style>

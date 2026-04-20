@@ -7,7 +7,12 @@
     >
       {{ mobileMenuOpen ? "Close" : "Menu" }}
     </div>
-    <div :class="['nav-menu', { 'menu-open': mobileMenuOpen }]">
+    <div
+      :class="[
+        'nav-menu',
+        { 'menu-open': mobileMenuOpen, 'transitions-ready': transitionsReady },
+      ]"
+    >
       <div class="primary-nav">
         <nuxt-link class="nav-item" to="/">Home</nuxt-link>
         <div
@@ -74,6 +79,8 @@ const { mobileMenuOpen } = storeToRefs(useMainStore());
 
 const route = useRoute();
 
+const transitionsReady = ref(false);
+
 const toggleSubNav = (e: MouseEvent) => {
   const el = e.currentTarget as HTMLElement;
   if (el) {
@@ -84,6 +91,12 @@ const toggleSubNav = (e: MouseEvent) => {
 watch(route, () => {
   mobileMenuOpen.value = false;
 });
+
+onMounted(() => {
+  requestAnimationFrame(() => {
+    transitionsReady.value = true;
+  });
+});
 </script>
 
 <style lang="scss" scoped>
@@ -93,6 +106,7 @@ watch(route, () => {
   left: 0;
   padding: 45px 0 0 45px;
   width: 180px;
+  z-index: 100;
   .logo {
     font-size: 27px;
     font-weight: 500;
@@ -115,7 +129,7 @@ watch(route, () => {
         display: block;
       }
     }
-    @media (hover: hover) {
+    @media (hover: hover) and (min-width: 801px) {
       &:hover {
         color: var(--accent-color);
       }
@@ -150,23 +164,24 @@ watch(route, () => {
   a {
     display: block;
     transition: color 0.2s;
-    @media (hover: hover) {
+    @media (hover: hover) and (min-width: 801px) {
       &:hover {
         color: var(--accent-color);
       }
     }
   }
   @media only screen and (max-width: 800px) {
-    position: relative;
-    padding: 0 0 20px 0;
     width: 100%;
+    padding: 12px 20px;
+    background-color: #fff;
+    box-sizing: border-box;
     .logo {
       margin-bottom: 0;
     }
     .mobile-menu-toggle {
       display: block;
       position: fixed;
-      top: 30px;
+      top: 18px;
       right: 20px;
       color: var(--accent-color);
       font-size: 15px;
@@ -184,24 +199,26 @@ watch(route, () => {
       }
     }
     .nav-menu {
+      display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100dvh;
       background-color: var(--accent-color);
-      z-index: -1;
       text-align: center;
       color: #fff;
       font-size: 18px;
       padding: 20px 0;
       z-index: 100;
       box-sizing: border-box;
-      display: flex;
       flex-direction: column;
       justify-content: center;
       transform: translateY(-100%);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      &.transitions-ready {
+        display: flex;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
       &.menu-open {
         transform: translateY(0);
       }
@@ -229,6 +246,10 @@ watch(route, () => {
       margin: 0 auto;
       width: fit-content;
       line-height: 45px;
+      &.child-active,
+      &.open {
+        color: #fff;
+      }
       &.has-children {
         margin: 20px auto;
       }
