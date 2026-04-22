@@ -11,6 +11,15 @@
 import homeQuery from "@/queries/home";
 
 const { data: homeData } = await useSanityQuery(homeQuery);
+
+useSeoMeta({
+  title: "Bella Wattles",
+  description: "Bella Wattles",
+});
+
+useHead({
+  title: "Bella Wattles",
+});
 </script>
 
 <style lang="scss" scoped>

@@ -3,10 +3,10 @@
     <span class="item-count">Cart [{{ numCartItems }}]</span>
   </div>
   <div
-    :class="['click-blocker', { open: cartOpen }]"
+    :class="['click-blocker', { open: cartOpen, ready: hasMounted }]"
     @click="cartOpen = false"
   ></div>
-  <div :class="['cart', { open: cartOpen }]">
+  <div :class="['cart', { open: cartOpen, ready: hasMounted }]">
     <div class="close-button" @click="cartOpen = false">Close</div>
     <nuxt-link
       class="cart-item"
@@ -33,6 +33,13 @@ const { cart, cartOpen } = storeToRefs(cartStore);
 const route = useRoute();
 
 const numCartItems = computed(() => cart.value?.lines?.nodes.length ?? 0);
+
+const hasMounted = ref(false);
+onMounted(() => {
+  nextTick(() => {
+    hasMounted.value = true;
+  });
+});
 
 watch(cart, (newCart, oldCart) => {
   const numItems = newCart?.lines?.nodes.length ?? 0;
@@ -84,7 +91,9 @@ const removeFromCart = (lineId: string) => {
   padding: 45px 20px 20px;
   box-sizing: border-box;
   transform: translateX(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  &.ready {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
   &.open {
     transform: translateX(0);
   }
@@ -113,7 +122,9 @@ const removeFromCart = (lineId: string) => {
   cursor: pointer;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  &.ready {
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
   &.open {
     opacity: 1;
     pointer-events: auto;
@@ -170,9 +181,10 @@ const removeFromCart = (lineId: string) => {
 
 @media only screen and (max-width: 800px) {
   .cart-indicator {
-    top: 29px;
+    top: 18px;
     right: 70px;
     transform: translateX(0);
+    font-size: 15px;
   }
   .cart {
     width: 100%;

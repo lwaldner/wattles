@@ -28,6 +28,16 @@
 
 <script lang="ts" setup>
 const { data: collection } = useFetchCollection("studio-inventory");
+
+
+useSeoMeta({
+  title: "Bella Wattles - Studio Inventory",
+  description: "Bella Wattles - Studio Inventory",
+});
+
+useHead({
+  title: "Bella Wattles - Studio Inventory",
+});
 </script>
 
 <style lang="scss" scoped>

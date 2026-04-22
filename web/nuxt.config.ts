@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: "Wyeth Creative Studio",
+      title: "Bella Wattles",
       htmlAttrs: {
         lang: "en",
       },

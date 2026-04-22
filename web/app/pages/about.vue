@@ -40,6 +40,15 @@ const portableTextComponents = {
     },
   },
 };
+
+useSeoMeta({
+  title: "Bella Wattles - About",
+  description: "Bella Wattles - About",
+});
+
+useHead({
+  title: "Bella Wattles - About",
+});
 </script>
 
 <style lang="scss" scoped>

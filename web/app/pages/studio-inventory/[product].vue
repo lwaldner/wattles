@@ -74,16 +74,29 @@ const itemInCart = computed(() => {
 const hasMultipleSlides = computed(
   () => (product.value?.images?.nodes?.length ?? 0) > 1
 );
+
+useSeoMeta({
+  title: `Bella Wattles - ${product.value.title}`,
+  description: product.value.descriptionHtml,
+});
+
+useHead({
+  title: `Bella Wattles - ${product.value.title}`,
+});
 </script>
 
 <style lang="scss" scoped>
 .page-product-detail {
-  
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  max-height: calc(100dvh - 45px);
+  align-items: center;
 }
 
 .slideshow-wrapper {
-  max-width: 100%;
-  width: calc(100% - 280px);
+  max-width: 650px;
+  width: 100%;
 }
 
 .slideshow {
@@ -109,6 +122,7 @@ const hasMultipleSlides = computed(
     width: 100%;
     height: auto;
     object-fit: contain;
+    aspect-ratio: 1;
   }
 }
 .thumbnails {
@@ -117,6 +131,8 @@ const hasMultipleSlides = computed(
     width: 65px;
     height: auto;
     cursor: pointer;
+    aspect-ratio: 1;
+    object-fit: contain;
     transition: opacity 0.2s;
     @media (hover: hover) {
       &:hover {

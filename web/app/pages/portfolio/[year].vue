@@ -70,6 +70,15 @@ const openSlideshow = (imageId) => {
     slideshowActive.value = true;
   }
 };
+
+useSeoMeta({
+  title: `Bella Wattles - ${portfolioData.value.title}`,
+  description: portfolioData.value.title,
+});
+
+useHead({
+  title: `Bella Wattles - ${portfolioData.value.title}`,
+});
 </script>
 
 <style lang="scss" scoped>
