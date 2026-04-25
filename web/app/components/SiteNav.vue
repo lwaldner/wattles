@@ -30,6 +30,12 @@
             <nuxt-link class="sub-nav-item" to="/portfolio/2024"
               >2024</nuxt-link
             >
+            <nuxt-link class="sub-nav-item" to="/portfolio/2023"
+              >2023</nuxt-link
+            >
+            <nuxt-link class="sub-nav-item" to="/portfolio/2022"
+              >2022</nuxt-link
+            >
           </div>
         </div>
         <div

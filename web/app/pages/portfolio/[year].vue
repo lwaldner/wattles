@@ -8,10 +8,14 @@
       <div class="column" v-for="(col, i) in imagesColumns" :key="i">
         <SanityImage
           v-for="image in col"
-          :asset-id="image.asset._id"
-          :alt="image.asset._id"
+          :key="image.asset?._id"
+          :asset-id="image.asset?._id"
+          :alt="image.asset?._id"
           :w="800"
-          @click="openSlideshow(image.asset._id)"
+          :style="{
+            aspectRatio: image.asset?.metadata?.dimensions?.aspectRatio,
+          }"
+          @click="openSlideshow(image.asset?._id)"
         />
       </div>
     </div>
@@ -28,7 +32,6 @@
 import portfolioQuery from "@/queries/portfolio";
 const { winWidth } = storeToRefs(useMainStore());
 const route = useRoute();
-const router = useRouter();
 
 const { data: portfolioData } = await useSanityQuery(portfolioQuery, {
   title: route.params.year,
@@ -64,7 +67,7 @@ const imagesColumns = computed(() => {
 
 const openSlideshow = (imageId) => {
   slideshowIndex.value = portfolioData.value.images.findIndex(
-    (img) => img.asset._id === imageId
+    (img) => img.asset?._id === imageId
   );
   if (slideshowIndex.value !== -1) {
     slideshowActive.value = true;
@@ -93,6 +96,8 @@ useHead({
       img {
         width: 100%;
         height: auto;
+        display: block;
+        object-fit: cover;
         cursor: pointer;
         transition: opacity 0.3s ease;
         @media (hover: hover) {

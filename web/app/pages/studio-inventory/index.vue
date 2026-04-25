@@ -1,34 +1,71 @@
 <template>
   <section class="page-studio-inventory">
-    <nuxt-link
-      v-for="product in collection"
-      :key="product.node.id"
-      :to="`/studio-inventory/${product.node.handle}`"
-      class="product-block"
+    <div
+      v-for="(column, columnIndex) in columns"
+      :key="columnIndex"
+      class="product-column"
     >
-      <img
-        class="product-image"
-        :src="product.node.featuredImage.desktop"
-        :style="{
-          aspectRatio: `${product.node.featuredImage.width} / ${product.node.featuredImage.height}`,
-        }"
-        alt="product"
-      />
-      <div class="product-info">
-        <span class="title">{{ product.node.title }}</span>
-        <span class="price"
-          >${{
-            parseInt(product.node.priceRange.minVariantPrice.amount)
-          }}</span
-        >
-      </div>
-    </nuxt-link>
+      <nuxt-link
+        v-for="product in column"
+        :key="product.node.id"
+        :to="`/studio-inventory/${product.node.handle}`"
+        class="product-block"
+      >
+        <img
+          class="product-image"
+          :src="product.node.featuredImage.desktop"
+          :style="{
+            aspectRatio: `${product.node.featuredImage.width} / ${product.node.featuredImage.height}`,
+          }"
+          alt="product"
+        />
+        <div class="product-info">
+          <span class="title">{{ product.node.title }}</span>
+          <span class="price"
+            >${{
+              parseInt(product.node.priceRange.minVariantPrice.amount)
+            }}</span
+          >
+        </div>
+      </nuxt-link>
+    </div>
   </section>
 </template>
 
 <script lang="ts" setup>
 const { data: collection } = useFetchCollection("studio-inventory");
 
+const columnCount = ref(4);
+
+const updateColumnCount = () => {
+  const width = window.innerWidth;
+  if (width <= 600) columnCount.value = 1;
+  else if (width <= 900) columnCount.value = 2;
+  else if (width <= 1200) columnCount.value = 3;
+  else columnCount.value = 4;
+};
+
+onMounted(() => {
+  updateColumnCount();
+  window.addEventListener("resize", updateColumnCount);
+});
+
+onBeforeUnmount(() => {
+  if (typeof window !== "undefined") {
+    window.removeEventListener("resize", updateColumnCount);
+  }
+});
+
+const columns = computed(() => {
+  const items = (collection.value as any[]) || [];
+  const count = columnCount.value;
+  const cols: any[][] = Array.from({ length: count }, () => []);
+  items.forEach((item, index) => {
+    const col = cols[index % count];
+    if (col) col.push(item);
+  });
+  return cols;
+});
 
 useSeoMeta({
   title: "Bella Wattles - Studio Inventory",
@@ -42,27 +79,25 @@ useHead({
 
 <style lang="scss" scoped>
 .page-studio-inventory {
-  column-count: 4;
-  column-gap: 20px;
-  @media (max-width: 1200px) {
-    column-count: 3;
-  }
-  @media (max-width: 900px) {
-    column-count: 2;
-  }
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
   @media (max-width: 600px) {
-    column-count: 1;
-    column-gap: 28px;
+    gap: 28px;
   }
+}
+
+.product-column {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-block {
   display: block;
   width: 100%;
   margin-bottom: 20px;
-  break-inside: avoid;
-  -webkit-column-break-inside: avoid;
-  page-break-inside: avoid;
   transition: color 0.2s;
   @media (max-width: 600px) {
     margin-bottom: 28px;
