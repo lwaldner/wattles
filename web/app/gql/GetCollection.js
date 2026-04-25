@@ -24,6 +24,16 @@ export default `query GetCollection($handle: String!) {
               currencyCode
             }
           }
+          compareAtPriceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
         }
       }
     }

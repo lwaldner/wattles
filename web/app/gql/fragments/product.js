@@ -37,6 +37,10 @@ export default `
         amount
         currencyCode
       }
+      compareAtPriceV2 {
+        amount
+        currencyCode
+      }
       selectedOptions {
         name
         value

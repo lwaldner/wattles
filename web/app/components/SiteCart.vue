@@ -20,7 +20,14 @@
         <span class="remove-item" @click="removeFromCart(item.id)">Remove</span>
       </div>
       <div class="price">
-        ${{ parseFloat(item.merchandise.priceV2.amount).toFixed(2) }}
+        <span v-if="hasDiscount(item)" class="compare-at-price"
+          >${{
+            parseFloat(item.merchandise.compareAtPriceV2.amount)
+          }}</span
+        >
+        <span
+          >${{ parseFloat(item.merchandise.priceV2.amount) }}</span
+        >
       </div>
     </nuxt-link>
     <a class="checkout-button" :href="cart?.checkoutUrl ?? ''">Checkout</a>
@@ -56,6 +63,14 @@ watch(route, () => {
 
 const removeFromCart = (lineId: string) => {
   cartStore.removeFromCart(lineId);
+};
+
+const hasDiscount = (item: any) => {
+  const compareAt = parseFloat(
+    item?.merchandise?.compareAtPriceV2?.amount ?? "0"
+  );
+  const price = parseFloat(item?.merchandise?.priceV2?.amount ?? "0");
+  return compareAt > 0 && compareAt > price;
 };
 </script>
 
@@ -158,6 +173,13 @@ const removeFromCart = (lineId: string) => {
   }
   .price {
     font-size: 14px;
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    .compare-at-price {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
   }
 }
 .checkout-button {
@@ -181,7 +203,7 @@ const removeFromCart = (lineId: string) => {
 
 @media only screen and (max-width: 800px) {
   .cart-indicator {
-    top: 18px;
+    top: 57px;
     right: 70px;
     transform: translateX(0);
     font-size: 15px;

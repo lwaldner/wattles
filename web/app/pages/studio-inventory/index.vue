@@ -21,11 +21,20 @@
         />
         <div class="product-info">
           <span class="title">{{ product.node.title }}</span>
-          <span class="price"
-            >${{
+          <span class="price">
+            <span
+              v-if="hasDiscount(product.node)"
+              class="compare-at-price"
+              >${{
+                parseInt(
+                  product.node.compareAtPriceRange.minVariantPrice.amount
+                )
+              }}</span
+            >
+            <span>${{
               parseInt(product.node.priceRange.minVariantPrice.amount)
-            }}</span
-          >
+            }}</span>
+          </span>
         </div>
       </nuxt-link>
     </div>
@@ -55,6 +64,14 @@ onBeforeUnmount(() => {
     window.removeEventListener("resize", updateColumnCount);
   }
 });
+
+const hasDiscount = (node: any) => {
+  const compareAt = parseFloat(
+    node?.compareAtPriceRange?.minVariantPrice?.amount ?? "0"
+  );
+  const price = parseFloat(node?.priceRange?.minVariantPrice?.amount ?? "0");
+  return compareAt > 0 && compareAt > price;
+};
 
 const columns = computed(() => {
   const items = (collection.value as any[]) || [];
@@ -127,5 +144,17 @@ useHead({
 .product-info span {
   display: block;
   line-height: 22px;
+}
+.product-info .price {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.product-info .price span {
+  display: inline;
+}
+.product-info .compare-at-price {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 </style>

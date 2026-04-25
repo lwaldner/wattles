@@ -33,6 +33,10 @@ export default `
               amount
               currencyCode
             }
+            compareAtPriceV2 {
+              amount
+              currencyCode
+            }
           }
         }
       }

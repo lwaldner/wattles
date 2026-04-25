@@ -32,7 +32,18 @@
       <div class="info-wrapper">
         <h2 class="product-title">{{ product.title }}</h2>
         <div class="price">
-          ${{ parseFloat(product.variants.nodes[0].priceV2.amount).toFixed(2) }}
+          <span v-if="hasDiscount" class="compare-at-price"
+            >${{
+              parseFloat(
+                product.variants.nodes[0].compareAtPriceV2.amount
+              )
+            }}</span
+          >
+          <span
+            >${{
+              parseFloat(product.variants.nodes[0].priceV2.amount)
+            }}</span
+          >
         </div>
       </div>
       <div v-if="!itemInCart" class="atc-button" @click="addToCart">
@@ -74,6 +85,13 @@ const itemInCart = computed(() => {
 const hasMultipleSlides = computed(
   () => (product.value?.images?.nodes?.length ?? 0) > 1
 );
+
+const hasDiscount = computed(() => {
+  const variant = product.value?.variants?.nodes?.[0];
+  const compareAt = parseFloat(variant?.compareAtPriceV2?.amount ?? "0");
+  const price = parseFloat(variant?.priceV2?.amount ?? "0");
+  return compareAt > 0 && compareAt > price;
+});
 
 useSeoMeta({
   title: `Bella Wattles - ${product.value.title}`,
@@ -153,6 +171,13 @@ useHead({
   }
   .price {
     font-size: 18px;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    .compare-at-price {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
   }
   .atc-button {
     background-color: var(--accent-color);
