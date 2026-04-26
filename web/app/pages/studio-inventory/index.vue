@@ -14,9 +14,6 @@
         <img
           class="product-image"
           :src="product.node.featuredImage.desktop"
-          :style="{
-            aspectRatio: `${product.node.featuredImage.width} / ${product.node.featuredImage.height}`,
-          }"
           alt="product"
         />
         <div class="product-info">
@@ -131,6 +128,7 @@ useHead({
   height: auto;
   display: block;
   object-fit: contain;
+  aspect-ratio: 1;
 }
 
 .product-info {
