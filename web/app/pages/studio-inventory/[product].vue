@@ -113,8 +113,9 @@ useHead({
 }
 
 .slideshow-wrapper {
+  flex: 0 1 650px;
   max-width: 650px;
-  width: 100%;
+  min-width: 0;
 }
 
 .slideshow {
@@ -145,6 +146,9 @@ useHead({
 }
 .thumbnails {
   margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
   img {
     width: 65px;
     height: auto;
@@ -161,6 +165,7 @@ useHead({
 }
 
 .product-info {
+  flex: 1 1 280px;
   margin-top: 12px;
   margin-bottom: 78px;
   min-width: 280px;
