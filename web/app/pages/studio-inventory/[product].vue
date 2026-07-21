@@ -50,7 +50,8 @@
           >
         </div>
       </div>
-      <div v-if="!itemInCart" class="atc-button" @click="addToCart">
+      <div v-if="isSoldOut" class="atc-button is-sold-out">Sold Out</div>
+      <div v-else-if="!itemInCart" class="atc-button" @click="addToCart">
         Add To Cart
       </div>
       <div v-else class="atc-button" @click="removeFromCart">
@@ -170,6 +171,10 @@ const hasMultipleSlides = computed(
   () => (product.value?.images?.nodes?.length ?? 0) > 1
 );
 
+const isSoldOut = computed(
+  () => product.value?.variants?.nodes?.[0]?.availableForSale === false
+);
+
 const hasDiscount = computed(() => {
   const variant = product.value?.variants?.nodes?.[0];
   const compareAt = parseFloat(variant?.compareAtPriceV2?.amount ?? "0");
@@ -286,6 +291,11 @@ useHead({
         background-color: #fff;
         color: var(--accent-color);
       }
+    }
+    &.is-sold-out {
+      cursor: default;
+      background-color: #fff;
+      color: var(--accent-color);
     }
   }
 }

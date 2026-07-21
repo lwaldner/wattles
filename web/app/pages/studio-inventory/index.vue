@@ -18,7 +18,10 @@
         />
         <div class="product-info">
           <span class="title">{{ product.node.title }}</span>
-          <span class="price">
+          <span v-if="!product.node.availableForSale" class="price sold-out"
+            >Sold Out</span
+          >
+          <span v-else class="price">
             <span
               v-if="hasDiscount(product.node)"
               class="compare-at-price"
